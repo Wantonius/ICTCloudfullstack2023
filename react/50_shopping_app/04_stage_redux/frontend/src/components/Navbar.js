@@ -7,9 +7,9 @@ const Navbar = (props) => {
 	const dispatch = useDispatch();
 	const state = useSelector(state => {
 		return {
-			isLogged:state.isLogged,
-			token:state.token,
-			user:state.user
+			isLogged:state.login.isLogged,
+			token:state.login.token,
+			user:state.login.user
 		}
 	})
 	

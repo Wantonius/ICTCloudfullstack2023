@@ -8,8 +8,14 @@ import {createStore,applyMiddleware,combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk'
 import loginReducer from './reducers/loginReducer';
+import shoppingReducer from './reducers/shoppingReducer';
 
-const store = createStore(loginReducer,applyMiddleware(thunk))
+const rootReducer = combineReducers({
+	login:loginReducer,
+	shopping:shoppingReducer
+})
+
+const store = createStore(rootReducer,applyMiddleware(thunk))
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
