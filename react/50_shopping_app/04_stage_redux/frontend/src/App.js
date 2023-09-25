@@ -6,8 +6,18 @@ import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
-
+import {useSelector} from 'react-redux';
 function App() {
+
+
+	const appState = useSelector(state => {
+		return {
+			isLogged:state.isLogged,
+			token:state.token,
+			error:state.error,
+			loading:state.loading
+		}
+	})
 	
 	const [state,setState] = useState({
 		list:[],
@@ -17,6 +27,7 @@ function App() {
 		loading:false
 	})
 	
+
 	
 	const [urlRequest,setUrlRequest] = useState({
 		url:"",
@@ -176,7 +187,7 @@ function App() {
 	//REST API
 	
 	const getList = (token) => {
-		let tempToken = state.token;
+		let tempToken = appState.token;
 		if(token) {
 			tempToken = token
 		}
@@ -199,7 +210,7 @@ function App() {
 				"method":"POST",
 				"headers":{
 					"Content-Type":"application/json",
-					"token":state.token
+					"token":appState.token
 				},
 				"body":JSON.stringify(item)
 			},
@@ -213,7 +224,7 @@ function App() {
 			request:{
 				"method":"DELETE",
 				"headers":{
-					"token":state.token
+					"token":appState.token
 				}
 			},
 			action:"removeitem"
@@ -227,7 +238,7 @@ function App() {
 				"method":"PUT",
 				"headers":{
 					"Content-Type":"application/json",
-					"token":state.token
+					"token":appState.token
 				},
 				"body":JSON.stringify(item)
 			},
@@ -281,16 +292,16 @@ function App() {
 	//RENDERING
 	
 	let message = <></>
-	if(state.loading) {
+	if(appState.loading) {
 		message = <h4>Loading ...</h4>
 	}
-	if(state.error) {
+	if(appState.error) {
 		message = <h4>{state.error}</h4>
 	}
-	if(state.isLogged) {
+	if(appState.isLogged) {
 		return (
 			<div className="App">
-				<Navbar logout={logout} isLogged={state.isLogged}/>
+				<Navbar />
 				<div style={{height:35, textAlign:"center"}}>
 					{message}
 				</div>
@@ -304,12 +315,12 @@ function App() {
 	} else{
 		return (
 			<div className="App">
-				<Navbar logout={logout} isLogged={state.isLogged}/>
+				<Navbar />
 				<div style={{height:35, textAlign:"center"}}>
 					{message}
 				</div>
 				<Routes>
-					<Route path="/" element={<LoginPage register={register} login={login} setError={setError}/>}/>
+					<Route path="/" element={<LoginPage />}/>
 					<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
 			</div>
