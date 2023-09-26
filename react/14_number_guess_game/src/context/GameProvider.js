@@ -53,10 +53,10 @@ const GameProvider = (props) => {
 		if(isNaN(guess)) {
 			let message = "Please enter a NUMBER between "+state.minimumGuess+" and "+state.maximumGuess;
 			setState((state) => {
-				return(
+				return{
 					...state,
 					message:message
-				)
+				}
 			})
 			return;
 		}
@@ -64,10 +64,10 @@ const GameProvider = (props) => {
 		if(tempGuess < state.minimumGuess || tempGuess > state.maximumGuess) {
 			let message = "Please enter a number between "+state.minimumGuess+" and "+state.maximumGuess
 			setState((state) => {
-				return(
+				return	{
 					...state,
 					message:message
-				)
+				}
 			})
 			return;			
 		}
