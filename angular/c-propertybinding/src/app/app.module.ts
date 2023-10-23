@@ -2,14 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { Conditional } from './conditional.component';
-import {PersonList} from './personlist.component';
-
+import { BindingExample } from './bindingexample.component';
 @NgModule({
   declarations: [
     AppComponent,
-	Conditional,
-	PersonList
+	BindingExample
   ],
   imports: [
     BrowserModule
