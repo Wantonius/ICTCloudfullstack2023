@@ -16,11 +16,9 @@ export class LoginPage implements OnInit {
 
 	
 	ngOnInit() {
-	/*
 		if(this.loginService.isUserLogged()) {
 			this.router.navigate(["list"])
 		}
-	*/
 	}
 	
 	
@@ -43,7 +41,7 @@ export class LoginPage implements OnInit {
 			next:(data) => {
 				this.message = "Login success";
 				this.loginService.setLoginState(true,data.token);
-				//this.router.navigate(["/list"])
+				this.router.navigate(["/list"])
 			},
 			error:(error) => this.message = error.message,
 			complete:() => console.log("Login complete")
