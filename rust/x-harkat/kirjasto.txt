@@ -1,0 +1,7 @@
+Tehdään kirjasto. Kirjasto on struct, jossa on implementoitu kirjojen voi lainaaminen, palauttaminen, poistaminen ja lisääminen.
+Lainattua kirjaa ei voi uudelleenlainata ennenkuin se palautetaan. Kirjaston sisällön voi tehdä Vec<Book> tyypin sisään. 
+Book-struct sisältää ainakin kirjan nimen, genren, kirjailijan nimen ja sivumäärän. 
+
+Jos haluaa tehdä interaktiivisen niin input/output Rustissa
+
+https://www.tutorialspoint.com/rust/rust_input_output.htm
