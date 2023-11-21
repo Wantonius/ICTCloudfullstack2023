@@ -1,0 +1,17 @@
+Numeronarvauspeli
+
+Arvataan numeroa 1-100 väliltä. Peli laskee arvausten määrän. 
+Arvauksen jälkeen peli ilmoittaa, että oliko arvaus liian suuri 
+vai liian pieni. Jos arvaa 75 ja arvaus on liian suuri peli estää
+suuremman luvun arvaamisen ja sama liian pienelle. Peli estää 
+myös 1-100 ulkopuolelta arvaamisen sekä kirjaimet 
+Peli juhlii (päätä miten),kun arvaat oikein. 
+Lisää myös Reset nappula, jolla voi aloittaa 
+pelin alusta.
+
+Järjestyksen kahden luvun (etc) välillä voi testaa https://doc.rust-lang.org/std/cmp/enum.Ordering.html ja
+
+match guess.cmp(&target_number) 
+
+Random numeroon tartte rand craten (on asennettu jo) sekä 
+https://rust-lang-nursery.github.io/rust-cookbook/algorithms/randomness.html
