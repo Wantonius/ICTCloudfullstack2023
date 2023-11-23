@@ -49,7 +49,7 @@ func HandleGetAndPost(w http.ResponseWriter, r* http.Request) {
 		case http.MethodPost:
 			var item Item
 			json.NewDecoder(r.Body).Decode(&item)
-			item.Id = strconv.FormatInt(int64(d),10)
+			item.Id = strconv.FormatInt(int64(id),10)
 			id++
 			ShoppingItems = append(ShoppingItems,item)
 			message := BackendMessage{Message:"Created"}
@@ -60,7 +60,7 @@ func HandleGetAndPost(w http.ResponseWriter, r* http.Request) {
 			message := BackendMessage{Message:"Unknown Command"}
 			json.NewEncoder(w).Encode(message)
 	}
-})
+}
 
 func HandleDeleteAndPut(w http.ResponseWriter, r* http.Request) {
 	temp_string := r.URL.String()
@@ -89,7 +89,7 @@ func HandleDeleteAndPut(w http.ResponseWriter, r* http.Request) {
 			message := BackendMessage{Message:"Unknown Command"}
 			json.NewEncoder(w).Encode(message)
 	}
-})
+}
 
 func CreateToken() string {
 	rand.Seed(time.Now().UnixNano())
@@ -121,7 +121,7 @@ func Register(w http.ResponseWriter, r* http.Request) {
 			message := BackendMessage{Message:"Unknown Command"}
 			json.NewEncoder(w).Encode(message)			
 	}
-})
+}
 
 func Login(w http.ResponseWriter, r* http.Request) {
 	switch r.Method {
@@ -148,4 +148,64 @@ func Login(w http.ResponseWriter, r* http.Request) {
 			message := BackendMessage{Message:"Unknown Command"}
 			json.NewEncoder(w).Encode(message)
 	}
-})
+}
+
+func Chain(f http.HandlerFunc, middlewares... Middleware) http.HandlerFunc {
+	for _,m := range middlewares {
+		f = m(f)
+	}
+	return f
+}
+
+func isUserLogged() Middleware {
+	return func(f http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r* http.Request) {
+			token := r.Header.Get("token")
+			if token == "" {
+				w.WriteHeader(http.StatusForbidden)
+				message := BackendMessage{Message:"Forbidden"}
+				json.NewEncoder(w).Encode(message)
+				return
+			}
+			for i,session := range LoggedSessions {
+				if token == session.Token {
+					now := time.Now().Unix()
+					if now > session.TTL {
+						LoggedSessions = append(LoggedSessions[:i],LoggedSessions[i+1:]...)
+						w.WriteHeader(http.StatusForbidden)
+						message := BackendMessage{Message:"Forbidden"}
+						json.NewEncoder(w).Encode(message)
+						return
+					} else {
+						session.TTL = now + time_to_live
+						f(w,r)
+						return
+					}
+				}
+			}
+			w.WriteHeader(http.StatusForbidden)
+			message := BackendMessage{Message:"Forbidden"}
+			json.NewEncoder(w).Encode(message)
+			return
+		}
+	}
+}
+
+func main() {
+	
+	ShoppingItems = make([]Item,0)
+	RegisteredUsers = make([]User,0)
+	LoggedSessions = make([]Session,0)
+	id = 100
+	
+	fs := http.FileServer(http.Dir("public/"))
+	http.Handle("/",fs)
+	
+	http.HandleFunc("/api/shopping",Chain(HandleGetAndPost,isUserLogged()))
+	http.HandleFunc("/api/shopping/",Chain(HandleDeleteAndPut,isUserLogged()))
+	http.HandleFunc("/register",Register)
+	http.HandleFunc("/login",Login)
+	
+	fmt.Println("Server is running in port 3000")
+	http.ListenAndServe(":3000",nil)
+}
